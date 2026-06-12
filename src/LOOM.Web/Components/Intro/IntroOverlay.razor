@@ -1,0 +1,79 @@
+@inject IJSRuntime JS
+@implements IAsyncDisposable
+
+@if (_visible)
+{
+    <div class="intro-overlay" id="introOverlay" @onclick="DismissIntro">
+        <div class="intro-stage">
+            <LoomBrand Variant="intro" Animate="true" />
+            <div class="intro-loader">
+                <div class="intro-loader-bar"></div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private bool _visible;
+    private IJSObjectReference? _uiModule;
+    private CancellationTokenSource? _dismissCts;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+            return;
+
+        _uiModule = await JS.InvokeAsync<IJSObjectReference>("import", "./js/loom-ui.js");
+
+        if (await _uiModule.InvokeAsync<bool>("hasIntroPlayed"))
+        {
+            await _uiModule.InvokeVoidAsync("skipIntro");
+            _visible = false;
+            StateHasChanged();
+            return;
+        }
+
+        await _uiModule.InvokeVoidAsync("markIntroPlayed");
+        await _uiModule.InvokeVoidAsync("setIntroActive", true);
+        _visible = true;
+        StateHasChanged();
+
+        _dismissCts = new CancellationTokenSource();
+        _ = AutoDismissAsync(_dismissCts.Token);
+    }
+
+    private async Task AutoDismissAsync(CancellationToken cancellationToken)
+    {
+        try
+        {
+            await Task.Delay(4600, cancellationToken);
+            await InvokeAsync(DismissIntro);
+        }
+        catch (OperationCanceledException)
+        {
+            /* dismissed early */
+        }
+    }
+
+    private async Task DismissIntro()
+    {
+        if (!_visible)
+            return;
+
+        _dismissCts?.Cancel();
+        _visible = false;
+
+        if (_uiModule is not null)
+            await _uiModule.InvokeVoidAsync("setIntroActive", false);
+
+        StateHasChanged();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        _dismissCts?.Cancel();
+        _dismissCts?.Dispose();
+        if (_uiModule is not null)
+            await _uiModule.DisposeAsync();
+    }
+}

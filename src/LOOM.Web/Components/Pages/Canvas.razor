@@ -1,0 +1,229 @@
+@page "/canvas"
+@layout CanvasLayout
+@rendermode InteractiveServer
+@using System.Text.Json
+@using Microsoft.AspNetCore.Components.Authorization
+@inject IJSRuntime JS
+@inject ILoomApiClient Api
+@inject CanvasWorkflowBridge WorkflowBridge
+@inject NavigationManager Nav
+@inject AuthService Auth
+@inject AuthenticationStateProvider AuthStateProvider
+@implements IAsyncDisposable
+
+<PageTitle>LOOM — Canvas</PageTitle>
+
+<LoomMarkSymbol />
+
+@if (!Auth.IsLoggedIn)
+{
+    <div class="canvas-auth-redirect" aria-hidden="true"></div>
+}
+else
+{
+<div class="app">
+    <div class="topbar">
+        <a href="/" class="brand" title="Back to landing">
+            <LoomBrand Variant="compact" />
+        </a>
+        <div class="file-area">
+            <div class="file-name" id="fileName">
+                <span class="dot-saved"></span>
+                <span class="file-name-text" contenteditable="true" spellcheck="false" title="Click to rename">untitled.loom</span>
+            </div>
+            <button type="button" class="tool-btn" id="btnOpen" title="Open workflow (⌘O)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                Open
+            </button>
+        </div>
+
+        <div class="tools">
+            <button type="button" class="tool-btn" id="btnUndo" title="Undo (⌘Z)" disabled>
+                <svg viewBox="0 0 24 24"><path d="M3 7v6h6" /><path d="M21 17a9 9 0 0 0-15-6.7L3 13" /></svg>
+            </button>
+            <button type="button" class="tool-btn" id="btnRedo" title="Redo (⌘⇧Z)" disabled>
+                <svg viewBox="0 0 24 24"><path d="M21 7v6h-6" /><path d="M3 17a9 9 0 0 1 15-6.7l3 2.7" /></svg>
+            </button>
+            <div class="tool-divider"></div>
+            <button type="button" class="tool-btn" id="btnSave" title="Save (⌘S)">
+                <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" /><polyline points="17 21 17 13 7 13 7 21" /><polyline points="7 3 7 8 15 8" /></svg>
+                Save
+            </button>
+            <button type="button" class="tool-btn" id="btnExport" title="Export to C# (⌘E)">
+                <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="12" y1="18" x2="12" y2="12" /><polyline points="9 15 12 12 15 15" /></svg>
+                Export
+            </button>
+            <button type="button" class="tool-btn" id="btnTidy" title="Auto-layout graph">
+                <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /></svg>
+                Tidy
+            </button>
+            <button type="button" class="tool-btn" id="btnClear" title="Clear canvas">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16" /><path d="M10 11v6" /><path d="M14 11v6" /><path d="M6 7l1-3h10l1 3" /><path d="M7 7v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V7" /></svg>
+            </button>
+        </div>
+
+        <div class="topbar-right">
+            <ThemeToggle ElementId="canvasThemeToggle" />
+            <div class="user-avatar" title="@Auth.CurrentUsername">@Auth.CurrentUsername?.Substring(0, 1)?.ToUpperInvariant()</div>
+            <button type="button" class="tool-btn logout-btn" title="Sign out" onclick="window.location.href='/api/auth/logout'">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                Sign out
+            </button>
+            <button type="button" class="run-btn" id="btnRun" title="Run workflow (⌘↵)">
+                <svg class="run-icon" viewBox="0 0 24 24"><polygon points="6 4 20 12 6 20" /></svg>
+                <span class="run-label">Run</span>
+            </button>
+        </div>
+    </div>
+
+    <aside class="library">
+        <div class="library-header">
+            <h2>Node Library</h2>
+        </div>
+        <NodeLibraryPanel />
+    </aside>
+
+    <div class="canvas-wrap">
+        <div class="canvas" id="canvas">
+            <div class="canvas-grid" id="canvasGrid"></div>
+            <div class="canvas-stage" id="canvasStage">
+                <svg class="canvas-svg" id="canvasSvg"></svg>
+            </div>
+            <div class="empty-state" id="emptyState">
+                <h3>Start by dragging a node</h3>
+                <p>Pick from the library on the left, or press <kbd>?</kbd> for shortcuts</p>
+            </div>
+        </div>
+
+        <div class="canvas-controls">
+            <div class="zoom-group">
+                <button type="button" class="zoom-btn" id="btnZoomOut" title="Zoom out (⌘-)">
+                    <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                </button>
+                <div class="zoom-display" id="zoomDisplay" title="Reset zoom (⌘0)">100%</div>
+                <button type="button" class="zoom-btn" id="btnZoomIn" title="Zoom in (⌘+)">
+                    <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                </button>
+                <button type="button" class="zoom-btn" id="btnFit" title="Fit to view (⌘F)">
+                    <svg viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2" /><path d="M17 3h2a2 2 0 0 1 2 2v2" /><path d="M21 17v2a2 2 0 0 1-2 2h-2" /><path d="M7 21H5a2 2 0 0 1-2-2v-2" /></svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="minimap" id="minimap">
+            <div class="minimap-label">Map</div>
+            <div class="minimap-canvas" id="minimapCanvas"></div>
+        </div>
+    </div>
+
+    <aside class="inspector">
+        <div class="inspector-header">
+            <h2>Inspector</h2>
+            <span class="count" id="inspectorCount">—</span>
+        </div>
+        <div class="inspector-body" id="inspectorBody">
+            <div class="inspector-empty">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" /><polyline points="3.27 6.96 12 12.01 20.73 6.96" /><line x1="12" y1="22.08" x2="12" y2="12" /></svg>
+                <h4>No node selected</h4>
+                <p>Click a node on the canvas to view and edit its configuration.</p>
+            </div>
+        </div>
+    </aside>
+
+    <div class="statusbar">
+        <div class="stat"><span class="pulse-led"></span><span class="label">READY</span></div>
+        <div class="sep"></div>
+        <div class="stat"><span class="label">Nodes</span><span class="value" id="statNodes">0</span></div>
+        <div class="sep"></div>
+        <div class="stat"><span class="label">Edges</span><span class="value" id="statEdges">0</span></div>
+        <div class="right">
+            <div class="stat" id="statRuntime"><span class="label">Last run</span><span class="value">—</span></div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay" hidden>
+    <div class="modal-dialog" id="modalDialog" role="dialog">
+        <div class="modal-header">
+            <h3 class="modal-title" id="modalTitle">Save workflow</h3>
+            <button type="button" class="modal-close" id="modalClose" title="Cancel">&times;</button>
+        </div>
+        <div class="modal-body" id="modalBody"></div>
+        <div class="modal-footer" id="modalFooter"></div>
+    </div>
+</div>
+<div class="toast-tray" id="toastTray"></div>
+<div class="ctx-menu" id="ctxMenu" style="display:none"></div>
+}
+
+@code {
+    private IJSObjectReference? _canvasModule;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!Auth.IsLoggedIn)
+        {
+            var state = await AuthStateProvider.GetAuthenticationStateAsync();
+            var identity = state.User.Identity;
+            if (identity?.IsAuthenticated == true)
+            {
+                Auth.SetCurrentUser(identity.Name!);
+            }
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !Auth.IsLoggedIn)
+        {
+            Nav.NavigateTo("/");
+            return;
+        }
+
+        if (!firstRender)
+            return;
+
+        try
+        {
+            var nodeTypes = await Api.GetNodeTypesAsync();
+            var nodeTypesJson = JsonSerializer.Serialize(nodeTypes, WebJson.Options);
+
+            _canvasModule = await JS.InvokeAsync<IJSObjectReference>("import", "./js/canvas-editor.js");
+            var apiStatus = await WorkflowBridge.CheckApiHealthAsync();
+            await _canvasModule.InvokeVoidAsync(
+                "initCanvasEditor",
+                WorkflowBridge.CreateReference(),
+                apiStatus,
+                nodeTypesJson);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine(ex);
+            try
+            {
+                await JS.InvokeVoidAsync("console.error", "LOOM canvas init failed: " + ex.Message);
+            }
+            catch (JSDisconnectedException)
+            {
+                /* circuit ended */
+            }
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_canvasModule is not null)
+        {
+            try
+            {
+                await _canvasModule.InvokeVoidAsync("disposeCanvasEditor");
+            }
+            catch (JSDisconnectedException)
+            {
+                /* circuit ended */
+            }
+            await _canvasModule.DisposeAsync();
+        }
+        await WorkflowBridge.DisposeAsync();
+    }
+}

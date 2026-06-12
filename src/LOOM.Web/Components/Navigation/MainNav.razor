@@ -1,0 +1,49 @@
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthService Auth
+@inject AuthenticationStateProvider AuthStateProvider
+
+<nav id="mainNav">
+    <div class="nav-inner">
+        <a href="/" class="brand">
+            <LoomBrand Variant="compact" />
+        </a>
+        <div class="nav-links">
+            <a href="#features" data-section="features">Features</a>
+            <a href="#how" data-section="how">How it works</a>
+            @if (Auth.IsLoggedIn)
+            {
+                <span class="nav-user">@Auth.CurrentUsername</span>
+                <a href="/canvas" class="nav-cta">Open Canvas →</a>
+            }
+            else
+            {
+                <a href="/login" class="nav-link-auth">Sign in</a>
+                <a href="/signup" class="nav-cta">Get started</a>
+            }
+        </div>
+        <div class="nav-mobile">
+            @if (Auth.IsLoggedIn)
+            {
+                <a href="/canvas" class="nav-cta">Open</a>
+            }
+            else
+            {
+                <a href="/login" class="nav-cta">Sign in</a>
+            }
+        </div>
+    </div>
+</nav>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        if (!Auth.IsLoggedIn)
+        {
+            var state = await AuthStateProvider.GetAuthenticationStateAsync();
+            if (state.User.Identity?.IsAuthenticated == true)
+            {
+                Auth.SetCurrentUser(state.User.Identity.Name!);
+            }
+        }
+    }
+}

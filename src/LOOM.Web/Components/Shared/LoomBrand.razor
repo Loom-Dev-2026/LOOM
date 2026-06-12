@@ -1,0 +1,52 @@
+<div class="loom-brand loom-brand--@Variant @Class" aria-label="Loom">
+    <svg class="loom-brand-mark" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        @if (Animate)
+        {
+            <defs>
+                <filter id="loomBrandGlow" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur stdDeviation="3.5" result="blur" />
+                    <feMerge>
+                        <feMergeNode in="blur" />
+                        <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                </filter>
+            </defs>
+        }
+        <path class="@ThreadClass(1)" d="M90 120 Q160 215, 230 120" fill="none" stroke="currentColor" stroke-width="@StrokeWidth" stroke-linecap="round" filter="@GlowFilter" />
+        <path class="@ThreadClass(2)" d="M90 200 Q160 105, 230 200" fill="none" stroke="currentColor" stroke-width="@StrokeWidth" stroke-linecap="round" filter="@GlowFilter" />
+        <circle class="@DotClass(1)" cx="90" cy="120" r="@DotRadius" fill="currentColor" filter="@GlowFilter" />
+        <circle class="@DotClass(2)" cx="230" cy="200" r="@DotRadius" fill="currentColor" filter="@GlowFilter" />
+    </svg>
+    <div class="loom-brand-wordmark">
+        @if (Animate)
+        {
+            <span class="intro-letter" style="--d:0ms">L</span>
+            <span class="intro-letter" style="--d:60ms">o</span>
+            <span class="intro-letter" style="--d:120ms">o</span>
+            <span class="intro-letter" style="--d:180ms">m</span>
+        }
+        else
+        {
+            <span>L</span>
+            <span>o</span>
+            <span>o</span>
+            <span>m</span>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public string Variant { get; set; } = "default";
+    [Parameter] public bool Animate { get; set; }
+    [Parameter] public string? Class { get; set; }
+
+    private string? GlowFilter => Animate ? "url(#loomBrandGlow)" : null;
+
+    private string StrokeWidth => Variant == "intro" ? "4" : "5.5";
+
+    private string DotRadius => Variant == "intro" ? "8" : "9.5";
+
+    private string ThreadClass(int index) => Animate ? $"intro-thread t{index}" : string.Empty;
+
+    private string DotClass(int index) => Animate ? $"intro-dot d{index}" : string.Empty;
+}

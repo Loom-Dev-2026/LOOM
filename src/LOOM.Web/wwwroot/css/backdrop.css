@@ -1,0 +1,98 @@
+/* ====== ANIMATED GRADIENT BACKDROP ====== */
+  .bg-aurora {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .bg-aurora::before,
+  .bg-aurora::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.5;
+    will-change: transform;
+  }
+  .bg-aurora::before {
+    top: -10%;
+    left: -10%;
+    width: 50vw;
+    height: 50vw;
+    background: radial-gradient(circle, var(--aurora-1), transparent 70%);
+    animation: aurora-drift-1 18s ease-in-out infinite;
+  }
+  .bg-aurora::after {
+    bottom: -20%;
+    right: -10%;
+    width: 55vw;
+    height: 55vw;
+    background: radial-gradient(circle, var(--aurora-2), transparent 70%);
+    animation: aurora-drift-2 22s ease-in-out infinite;
+  }
+
+  /* Grid is now rendered via .grid-base + .grid-glow elements below */
+
+  /* ====== CURSOR-REACTIVE GRID — light green tint follows the cursor ====== */
+  /* The base grid is dim; a second grid layer is lime-tinted and revealed only
+     near the cursor via a radial-gradient mask. Result: grid lines "light up"
+     where the cursor is, like the cursor is a flashlight on graph paper. */
+  .grid-base {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+  }
+  .grid-glow {
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background-image:
+      linear-gradient(var(--grid-glow) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-glow) 1px, transparent 1px);
+    background-size: 48px 48px;
+    /* Mask reveals grid only near cursor — radial gradient centered on mouse */
+    mask-image: radial-gradient(
+      circle 300px at var(--mx, 50%) var(--my, 50%),
+      rgba(0,0,0,1) 0%,
+      rgba(0,0,0,0.7) 25%,
+      rgba(0,0,0,0.2) 55%,
+      transparent 75%
+    );
+    -webkit-mask-image: radial-gradient(
+      circle 300px at var(--mx, 50%) var(--my, 50%),
+      rgba(0,0,0,1) 0%,
+      rgba(0,0,0,0.7) 25%,
+      rgba(0,0,0,0.2) 55%,
+      transparent 75%
+    );
+    will-change: mask-image, -webkit-mask-image;
+    transition: opacity 400ms ease;
+  }
+  /* Soft accompanying lime wash that bleeds toward the cursor */
+  .grid-wash {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: radial-gradient(
+      circle 340px at var(--mx, 50%) var(--my, 50%),
+      var(--grid-wash) 0%,
+      transparent 65%
+    );
+    mix-blend-mode: screen;
+    will-change: background;
+    transition: opacity 400ms ease;
+  }
+  .grid-glow.hidden, .grid-wash.hidden { opacity: 0; }
+  @media (hover: none) {
+    .grid-glow, .grid-wash { display: none; }
+  }

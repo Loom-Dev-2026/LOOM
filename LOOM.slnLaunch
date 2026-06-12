@@ -1,0 +1,48 @@
+{
+  "version": "0.2.1",
+  "defaults": {
+    "action": "Start",
+    "startupProject": "src\\LOOM.Web\\LOOM.Web.csproj",
+    "launchProfile": "loom"
+  },
+  "configurations": [
+    {
+      "name": "LOOM (integrated — recommended)",
+      "projects": [
+        {
+          "path": "src\\LOOM.AppHost\\LOOM.AppHost.csproj",
+          "action": "Start"
+        }
+      ]
+    },
+    {
+      "name": "LOOM.Web only (in-process API)",
+      "projects": [
+        {
+          "path": "src\\LOOM.Web\\LOOM.Web.csproj",
+          "action": "Start",
+          "launchProfile": "loom"
+        }
+      ]
+    },
+    {
+      "name": "Split: Backend API + Frontend",
+      "projects": [
+        {
+          "path": "Loom backend\\Loom backend\\LOOM VP Project.csproj",
+          "action": "Start",
+          "launchProfile": "http"
+        },
+        {
+          "path": "src\\LOOM.Web\\LOOM.Web.csproj",
+          "action": "Start",
+          "launchProfile": "http",
+          "environmentVariables": {
+            "LoomApi__Mode": "Remote",
+            "LoomApi__BaseUrl": "http://localhost:5201"
+          }
+        }
+      ]
+    }
+  ]
+}

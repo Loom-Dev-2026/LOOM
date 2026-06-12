@@ -1,0 +1,148 @@
+/* ============ NAV ============ */
+  nav {
+    position: fixed;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    width: calc(100% - 32px);
+    max-width: 1180px;
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    transition: background 400ms var(--ease-out-expo),
+                border-color 400ms var(--ease-out-expo),
+                box-shadow 400ms var(--ease-out-expo);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    opacity: 0;
+    animation: nav-drop 800ms 3800ms var(--ease-out-expo) forwards;
+  }
+  nav.scrolled {
+    background: var(--glass-bg);
+    border-color: var(--border-strong);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.35);
+  }
+  .nav-inner {
+    padding: 12px 20px 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    text-decoration: none;
+    transition: color 200ms ease;
+  }
+  .brand:hover { opacity: 0.9; }
+  .brand .loom-brand-mark {
+    animation: brand-pulse 4s ease-in-out infinite;
+  }
+  .brand:hover .loom-brand-mark {
+    transform: rotate(-8deg) scale(1.08);
+    transition: transform 400ms var(--ease-spring);
+  }
+  .nav-links {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+  .nav-links a {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 450;
+    padding: 8px 14px;
+    border-radius: 8px;
+    transition: color 200ms ease, background 200ms ease;
+    position: relative;
+  }
+  .nav-links a:hover {
+    color: var(--text);
+    background: rgba(255,255,255,0.04);
+  }
+  .nav-links a.active {
+    color: var(--accent);
+  }
+  .nav-links a.active::after {
+    content: '';
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    bottom: 4px;
+    height: 1.5px;
+    background: var(--accent);
+    border-radius: 2px;
+    animation: nav-underline 300ms var(--ease-out-expo);
+  }
+  .nav-cta {
+    padding: 8px 14px;
+    background: var(--accent);
+    color: #0a0a0b;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    transition: transform 220ms var(--ease-spring), box-shadow 220ms ease;
+    margin-left: 8px;
+  }
+  .nav-cta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.4), transparent 70%);
+    transform: translateX(-100%);
+    transition: transform 600ms var(--ease-out-expo);
+  }
+  .nav-cta:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px var(--accent-glow);
+  }
+  .nav-cta:hover::before { transform: translateX(100%); }
+  .nav-cta:active { transform: translateY(0) scale(0.97); }
+  .nav-mobile { display: none; }
+
+  /* Theme toggle */
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    cursor: pointer;
+    margin: 0 4px;
+    position: relative;
+    overflow: hidden;
+    transition: color 200ms ease, background 200ms ease, border-color 200ms ease, transform 220ms var(--ease-spring);
+  }
+  .theme-toggle:hover {
+    color: var(--accent-text);
+    border-color: var(--accent-glow);
+    background: var(--accent-soft);
+    transform: translateY(-1px);
+  }
+  .theme-toggle:active { transform: scale(0.92); }
+  .theme-toggle svg {
+    position: absolute;
+    transition: opacity 300ms var(--ease-out-expo), transform 400ms var(--ease-spring);
+  }
+  .theme-toggle .icon-sun { opacity: 0; transform: rotate(-90deg) scale(0.5); }
+  .theme-toggle .icon-moon { opacity: 1; transform: rotate(0) scale(1); }
+  [data-theme="light"] .theme-toggle .icon-sun { opacity: 1; transform: rotate(0) scale(1); }
+  [data-theme="light"] .theme-toggle .icon-moon { opacity: 0; transform: rotate(90deg) scale(0.5); }

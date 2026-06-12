@@ -1,0 +1,141 @@
+/* ============ KEYFRAMES ============ */
+  @keyframes intro-fade-out {
+    0% { opacity: 1; visibility: visible; }
+    99% { opacity: 0; visibility: visible; }
+    100% { opacity: 0; visibility: hidden; }
+  }
+  @keyframes intro-grid-in {
+    from { opacity: 0; }
+    to { opacity: 0.55; }
+  }
+  @keyframes intro-grid-out {
+    from { opacity: 0.55; }
+    to { opacity: 0; }
+  }
+  @keyframes intro-scan {
+    0% { opacity: 0; transform: scaleX(0); }
+    40% { opacity: 1; transform: scaleX(1); }
+    100% { opacity: 0; transform: scaleX(1); }
+  }
+  @keyframes intro-dot-in {
+    0% {
+      opacity: 0;
+      transform: scale(0);
+      filter: blur(8px) brightness(2);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.6);
+      filter: blur(0) brightness(1.5);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+      filter: blur(0) brightness(1);
+    }
+  }
+  @keyframes intro-thread-draw {
+    0% { stroke-dashoffset: 200; opacity: 0; }
+    20% { opacity: 1; }
+    100% { stroke-dashoffset: 0; opacity: 1; }
+  }
+  @keyframes intro-letter-in {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+      filter: blur(8px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+      filter: blur(0);
+    }
+  }
+  @keyframes intro-loader {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(0%); }
+  }
+  @keyframes intro-stage-out {
+    0% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(0.92); }
+  }
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes word-reveal {
+    0% { opacity: 0; transform: translateY(40px) rotate(2deg); filter: blur(8px); }
+    100% { opacity: 1; transform: translateY(0) rotate(0); filter: blur(0); }
+  }
+  @keyframes underline-grow {
+    to { transform: scaleX(1); }
+  }
+  @keyframes nav-drop {
+    from { opacity: 0; transform: translateX(-50%) translateY(-30px); }
+    to { opacity: 1; transform: translateX(-50%) translateY(0); }
+  }
+  @keyframes nav-underline {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+  @keyframes node-appear {
+    0% {
+      opacity: 0;
+      transform: translateY(12px) scale(0.85);
+      filter: blur(4px);
+    }
+    60% {
+      opacity: 1;
+      transform: translateY(-2px) scale(1.04);
+      filter: blur(0);
+      box-shadow: 0 0 0 1px var(--accent), 0 0 32px var(--accent-glow);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      filter: blur(0);
+    }
+  }
+  @keyframes result-pop {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes draw-pipe {
+    from { stroke-dashoffset: var(--len, 600); }
+    to { stroke-dashoffset: 0; }
+  }
+  @keyframes pipe-flow {
+    0% { stroke-dashoffset: var(--len, 600); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { stroke-dashoffset: 0; opacity: 0; }
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.4); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+  @keyframes brand-pulse {
+    0%, 100% { filter: drop-shadow(0 0 0 transparent); }
+    50% { filter: drop-shadow(0 0 8px var(--accent-glow)); }
+  }
+  @keyframes aurora-drift-1 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(15vw, 10vh) scale(1.15); }
+    66% { transform: translate(-5vw, 20vh) scale(0.9); }
+  }
+  @keyframes aurora-drift-2 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(-20vw, -15vh) scale(1.2); }
+  }
+  @keyframes cta-orb-1 {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(40px, 30px); }
+  }
+  @keyframes cta-orb-2 {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(-40px, -30px); }
+  }

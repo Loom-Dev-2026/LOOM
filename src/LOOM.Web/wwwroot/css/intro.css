@@ -1,0 +1,100 @@
+/* ============ CINEMATIC INTRO ============ */
+  .intro-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: #0a0a0b;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
+    cursor: pointer;
+    animation: intro-fade-out 900ms 3800ms var(--ease-out-expo) forwards;
+  }
+  .intro-overlay::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at center, rgba(180,244,97,0.08), transparent 60%),
+      linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 100% 100%, 32px 32px, 32px 32px;
+    opacity: 0;
+    animation: intro-grid-in 600ms 100ms ease-out forwards, intro-grid-out 600ms 3300ms ease-out forwards;
+  }
+  /* Subtle scan line that sweeps across before dots appear */
+  .intro-overlay::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; top: 50%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0;
+    transform: scaleX(0);
+    animation: intro-scan 800ms 200ms var(--ease-out-expo) forwards;
+  }
+  .intro-stage {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    animation: intro-stage-out 800ms 3100ms var(--ease-out-expo) forwards;
+  }
+
+  .intro-stage .loom-brand--intro {
+    animation: none;
+  }
+  .intro-dot {
+    opacity: 0;
+    transform-origin: center;
+    transform-box: fill-box;
+  }
+  .intro-dot.d1 { animation: intro-dot-in 600ms 600ms var(--ease-spring) forwards; }
+  .intro-dot.d2 { animation: intro-dot-in 600ms 800ms var(--ease-spring) forwards; }
+
+  .intro-thread {
+    stroke-dasharray: 200;
+    stroke-dashoffset: 200;
+    opacity: 0;
+  }
+  .intro-thread.t1 { animation: intro-thread-draw 900ms 1100ms var(--ease-out-expo) forwards; }
+  .intro-thread.t2 { animation: intro-thread-draw 900ms 1450ms var(--ease-out-expo) forwards; }
+
+  .intro-letter {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(20px);
+    filter: blur(8px);
+    animation: intro-letter-in 700ms var(--ease-out-expo) forwards;
+    animation-delay: calc(2450ms + var(--d, 0ms));
+  }
+
+  /* Subtle loading bar at the bottom */
+  .intro-loader {
+    position: relative;
+    margin-top: 32px;
+    width: 160px;
+    height: 2px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 2px;
+    overflow: hidden;
+    opacity: 0;
+    animation: fade-up 600ms 300ms var(--ease-out-expo) forwards;
+  }
+  .intro-loader-bar {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent-bright));
+    transform: translateX(-100%);
+    animation: intro-loader 3000ms 400ms cubic-bezier(0.5, 0, 0.5, 1) forwards;
+    box-shadow: 0 0 10px var(--accent-glow);
+  }
+
+  body.intro-active nav,
+  body.intro-active main {
+    opacity: 0;
+    pointer-events: none;
+  }

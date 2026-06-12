@@ -1,0 +1,62 @@
+<section class="canvas-demo" id="canvasDemo">
+    <div class="canvas-frame" id="canvasFrame">
+        <div class="canvas-header">
+            <div class="traffic"><span></span><span></span><span></span></div>
+            <div class="canvas-tab">user-onboarding.loom</div>
+            <div class="canvas-run-status">
+                <span class="dot"></span>
+                EXECUTED IN 142ms
+            </div>
+        </div>
+        <div class="canvas-area" id="canvasArea">
+            <div class="canvas-spotlight" id="canvasSpotlight"></div>
+            <div class="canvas-stage" id="canvasStage">
+                <svg class="connections" id="connections" preserveAspectRatio="none"></svg>
+
+                <div class="node input n1" style="left:60px; top:70px;">
+                    <div class="node-header"><span class="badge"></span><span class="name">DataInput</span></div>
+                    <div class="node-value">"alice@email.com"</div>
+                    <span class="port port-out" data-port="1-out"></span>
+                </div>
+                <div class="node input n2" style="left:60px; top:250px;">
+                    <div class="node-header"><span class="badge"></span><span class="name">DataInput</span></div>
+                    <div class="node-value">"Welcome!"</div>
+                    <span class="port port-out" data-port="2-out"></span>
+                </div>
+                <div class="node logic n3" style="left:330px; top:60px;">
+                    <div class="node-header"><span class="badge"></span><span class="name">Validate</span></div>
+                    <div class="node-value">isEmail(x)</div>
+                    <div class="node-result">-&gt; true</div>
+                    <span class="port port-in" data-port="3-in"></span>
+                    <span class="port port-out" data-port="3-out"></span>
+                </div>
+                <div class="node logic n4" style="left:330px; top:250px;">
+                    <div class="node-header"><span class="badge"></span><span class="name">RoslynScript</span></div>
+                    <div class="node-value">x.ToUpper()</div>
+                    <div class="node-result">-&gt; "WELCOME!"</div>
+                    <span class="port port-in" data-port="4-in"></span>
+                    <span class="port port-out" data-port="4-out"></span>
+                </div>
+                <div class="node logic n5" style="left:620px; top:155px;">
+                    <div class="node-header"><span class="badge"></span><span class="name">APIRequest</span></div>
+                    <div class="node-value">POST /notify</div>
+                    <div class="node-result">-&gt; 200 OK</div>
+                    <span class="port port-in" data-port="5-in"></span>
+                    <span class="port port-out" data-port="5-out"></span>
+                </div>
+                <div class="node output n6" style="left:910px; top:155px;">
+                    <div class="node-header"><span class="badge"></span><span class="name">Output</span></div>
+                    <div class="node-value">{ sent: true }</div>
+                    <span class="port port-in" data-port="6-in"></span>
+                </div>
+
+                <div class="inspector-mini">
+                    <div class="lbl">Inspector</div>
+                    <div class="row"><span>Nodes</span><span class="val">6</span></div>
+                    <div class="row"><span>Edges</span><span class="val">6</span></div>
+                    <div class="row"><span>Runtime</span><span class="val">142ms</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

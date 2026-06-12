@@ -1,0 +1,49 @@
+﻿@page "/"
+@layout LandingLayout
+@rendermode InteractiveServer
+@inject IJSRuntime JS
+@implements IAsyncDisposable
+
+<PageTitle>LOOM — Visual C# Workflow &amp; Application Development</PageTitle>
+
+<LoomMarkSymbol />
+<IntroOverlay />
+<BackgroundEffects />
+<MainNav />
+<HeroSection />
+<CanvasDemoSection />
+<LogosSection />
+<FeaturesSection />
+<HowSection />
+<StatsSection />
+<CtaSection />
+<FooterSection />
+
+@code {
+    private IJSObjectReference? _landingModule;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+            return;
+
+        _landingModule = await JS.InvokeAsync<IJSObjectReference>("import", "./js/landing.js");
+        await _landingModule.InvokeVoidAsync("initLanding");
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_landingModule is not null)
+        {
+            try
+            {
+                await _landingModule.InvokeVoidAsync("disposeLanding");
+            }
+            catch (JSDisconnectedException)
+            {
+                /* circuit gone */
+            }
+            await _landingModule.DisposeAsync();
+        }
+    }
+}

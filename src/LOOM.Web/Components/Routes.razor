@@ -1,0 +1,15 @@
+﻿<Router AppAssembly="typeof(Program).Assembly">
+    <Found Context="routeData">
+        <RouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)" />
+        <FocusOnNavigate RouteData="routeData" Selector="h1" />
+    </Found>
+    <NotFound>
+        <RouteView RouteData="@NotFoundRouteData" DefaultLayout="typeof(Layout.MainLayout)" />
+    </NotFound>
+</Router>
+
+@code {
+    private static readonly RouteData NotFoundRouteData = new(
+        typeof(Pages.NotFound),
+        new Dictionary<string, object?>());
+}

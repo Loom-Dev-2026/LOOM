@@ -1,0 +1,538 @@
+/* Automated Hello World demo — login / signup (state-driven) */
+:root {
+  --loom-demo-warn: #ff9d3f;
+  --loom-demo-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --loom-demo-ease-spring: cubic-bezier(0.2, 0.8, 0.2, 1.05);
+}
+
+.loom-auth-demo {
+  position: relative;
+  z-index: 1;
+  width: min(860px, 100%);
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--border-strong);
+  border-radius: 24px;
+  background:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+    rgba(10, 10, 11, 0.58);
+  background-size: 30px 30px, 30px 30px, auto;
+  box-shadow: 0 34px 100px rgba(0, 0, 0, 0.48), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(24px);
+  transform: none !important;
+}
+
+.loom-demo-frame {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Chrome — Run button is fixed top-right, never repositioned */
+.loom-demo-chrome {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  height: 44px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.22);
+}
+
+.loom-demo-traffic {
+  display: flex;
+  gap: 6px;
+}
+
+.loom-demo-traffic span {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: var(--text-faint);
+}
+
+.loom-demo-traffic span:first-child {
+  background: var(--accent);
+  box-shadow: 0 0 14px var(--accent-glow);
+}
+
+.loom-demo-title {
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.loom-demo-run {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+  margin-left: auto;
+  padding: 0 14px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 7px;
+  background: var(--accent);
+  color: #0a0a0b;
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  box-shadow: 0 4px 18px var(--accent-glow);
+  pointer-events: none;
+  flex-shrink: 0;
+  transition:
+    background 280ms var(--loom-demo-ease),
+    box-shadow 280ms var(--loom-demo-ease),
+    transform 220ms var(--loom-demo-ease-spring),
+    opacity 420ms var(--loom-demo-ease);
+}
+
+.loom-demo-run::before {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.42), transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 600ms var(--loom-demo-ease);
+}
+
+.loom-demo-run.is-pressed {
+  transform: scale(0.96);
+}
+
+.loom-demo-run.is-pressed::before {
+  transform: translateX(100%);
+}
+
+.loom-demo-run.is-executing {
+  background: var(--loom-demo-warn);
+  box-shadow: 0 6px 22px rgba(255, 157, 63, 0.42);
+}
+
+.loom-demo-run.is-executing .loom-demo-run-icon {
+  animation: loomRunSpin 800ms linear infinite;
+}
+
+.loom-demo-run.is-hidden {
+  opacity: 0;
+  transform: scale(0.9);
+  pointer-events: none;
+}
+
+.loom-demo-run-icon {
+  width: 13px;
+  height: 13px;
+  fill: currentColor;
+}
+
+.loom-demo-stage {
+  position: relative;
+  height: clamp(300px, 42vh, 360px);
+  overflow: hidden;
+}
+
+/* Canvas */
+.loom-demo-canvas {
+  position: absolute;
+  inset: 0;
+  opacity: 1;
+  transform: scale(1);
+  transition:
+    opacity 650ms var(--loom-demo-ease),
+    transform 650ms var(--loom-demo-ease);
+}
+
+.loom-demo-canvas.is-fading {
+  opacity: 0;
+  transform: scale(0.97);
+  pointer-events: none;
+}
+
+.loom-demo-canvas.is-resetting {
+  opacity: 0;
+  transition-duration: 500ms;
+}
+
+/* Edge */
+.loom-demo-edge {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.loom-demo-edge-base,
+.loom-demo-edge-flow {
+  fill: none;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.loom-demo-edge-base {
+  stroke: var(--pipe-base, rgba(180, 244, 97, 0.36));
+  stroke-width: 2.5;
+  stroke-dasharray: var(--edge-len, 320);
+  stroke-dashoffset: var(--edge-len, 320);
+  opacity: 0;
+  filter: drop-shadow(0 0 4px var(--accent-glow));
+  transition:
+    opacity 320ms ease,
+    stroke-dashoffset 900ms var(--loom-demo-ease);
+}
+
+.loom-auth-demo.is-edge-drawing .loom-demo-edge-base,
+.loom-auth-demo.is-edge-drawn .loom-demo-edge-base {
+  opacity: 1;
+}
+
+.loom-auth-demo.is-edge-drawing .loom-demo-edge-base,
+.loom-auth-demo.is-edge-drawn .loom-demo-edge-base {
+  stroke-dashoffset: 0;
+}
+
+.loom-demo-edge-flow {
+  stroke: var(--loom-demo-warn);
+  stroke-width: 2.25;
+  stroke-dasharray: 14 var(--edge-len, 320);
+  stroke-dashoffset: var(--edge-len, 320);
+  opacity: 0;
+  filter: drop-shadow(0 0 8px rgba(255, 157, 63, 0.55));
+  transition:
+    stroke-dashoffset 600ms linear,
+    opacity 280ms ease;
+}
+
+.loom-auth-demo.is-edge-pulsing .loom-demo-edge-flow {
+  opacity: 0.95;
+  stroke-dashoffset: 0;
+}
+
+.loom-demo-canvas.is-resetting .loom-demo-edge-base,
+.loom-demo-canvas.is-resetting .loom-demo-edge-flow {
+  opacity: 0;
+  stroke-dashoffset: var(--edge-len, 320);
+  transition: none;
+}
+
+/* Nodes */
+.loom-demo-node {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  width: min(200px, 34%);
+  padding: 12px 14px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9px;
+  background: rgba(18, 18, 23, 0.94);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.34);
+  opacity: 0;
+  transition:
+    opacity 500ms var(--loom-demo-ease),
+    transform 650ms var(--loom-demo-ease),
+    border-color 320ms ease,
+    box-shadow 320ms ease;
+  will-change: transform, opacity;
+}
+
+.loom-demo-node--input {
+  left: 8%;
+  transform: translateY(-50%) translateX(-56px);
+}
+
+.loom-demo-node--output {
+  right: 8%;
+  transform: translateY(-50%) translateX(56px);
+}
+
+.loom-demo-node--input.is-visible {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+.loom-demo-node--output.is-visible {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+.loom-demo-node.is-running {
+  border-color: var(--loom-demo-warn);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(255, 157, 63, 0.55),
+    0 0 34px rgba(255, 157, 63, 0.26);
+}
+
+.loom-demo-node.is-success {
+  border-color: rgba(180, 244, 97, 0.55);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.35),
+    0 0 0 1px var(--accent-glow),
+    0 0 24px rgba(180, 244, 97, 0.18);
+}
+
+.loom-demo-node-head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.loom-demo-badge {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--node-in);
+  box-shadow: 0 0 10px rgba(110, 231, 255, 0.5);
+}
+
+.loom-demo-node--output .loom-demo-badge {
+  background: var(--accent);
+  box-shadow: 0 0 10px var(--accent-glow);
+}
+
+.loom-demo-node-name {
+  overflow: hidden;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.loom-demo-node-status {
+  flex-shrink: 0;
+  min-width: 40px;
+  padding: 2px 7px;
+  border-radius: 5px;
+  background: rgba(0, 0, 0, 0.22);
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  text-align: center;
+  white-space: nowrap;
+  transition: color 280ms ease, background 280ms ease;
+}
+
+.loom-demo-node.is-running .loom-demo-node-status {
+  color: var(--loom-demo-warn);
+  background: rgba(255, 157, 63, 0.12);
+}
+
+.loom-demo-node.is-success .loom-demo-node-status {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.loom-demo-node-value {
+  padding: 8px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.28);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-align: center;
+}
+
+.loom-demo-node--output .loom-demo-node-value {
+  border-color: rgba(180, 244, 97, 0.16);
+  background: rgba(180, 244, 97, 0.08);
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* Ports — vertically centered on node edge */
+.loom-demo-port {
+  position: absolute;
+  top: 50%;
+  width: 11px;
+  height: 11px;
+  border: 2px solid var(--accent);
+  border-radius: 999px;
+  background: #05060a;
+  box-shadow: 0 0 10px var(--accent-glow);
+  transform: translateY(-50%);
+}
+
+.loom-demo-port--out { right: -6px; }
+.loom-demo-port--in { left: -6px; }
+
+/* Code editor */
+.loom-demo-editor {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 18px 18px;
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+  transition:
+    opacity 650ms var(--loom-demo-ease),
+    transform 650ms var(--loom-demo-ease);
+  pointer-events: none;
+}
+
+.loom-demo-editor.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.loom-demo-editor.is-resetting {
+  opacity: 0;
+  transform: translateY(8px) scale(0.99);
+  transition-duration: 500ms;
+}
+
+.loom-demo-editor-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.loom-demo-editor-header em {
+  color: var(--text-faint);
+  font-style: normal;
+}
+
+.loom-demo-editor-body {
+  flex: 1;
+  margin: 12px 0 0;
+  padding: 14px 16px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(5, 6, 10, 0.82);
+}
+
+.loom-demo-editor-body code {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.loom-demo-code-line {
+  display: block;
+  min-height: 1.7em;
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 380ms var(--loom-demo-ease),
+    transform 380ms var(--loom-demo-ease);
+}
+
+.loom-demo-code-line.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.loom-demo-editor-body .kw { color: var(--node-in); }
+.loom-demo-editor-body .type { color: var(--node-in); }
+.loom-demo-editor-body .var { color: var(--text); }
+.loom-demo-editor-body .str { color: var(--accent); }
+
+.loom-demo-terminal {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 10px;
+  padding: 11px 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.28);
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 420ms var(--loom-demo-ease),
+    transform 420ms var(--loom-demo-ease);
+}
+
+.loom-demo-terminal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.loom-demo-terminal strong {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* Faster loop when auth form is focused */
+.loom-auth-demo.is-fast .loom-demo-node,
+.loom-auth-demo.is-fast .loom-demo-canvas,
+.loom-auth-demo.is-fast .loom-demo-editor,
+.loom-auth-demo.is-fast .loom-demo-edge-base {
+  transition-duration: 420ms;
+}
+
+@keyframes loomRunSpin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 899px) {
+  .loom-demo-stage {
+    height: 280px;
+  }
+
+  .loom-demo-node {
+    width: min(168px, 38%);
+  }
+
+}
+
+@media (max-width: 579px) {
+  .loom-demo-stage {
+    height: 250px;
+  }
+
+  .loom-demo-node {
+    width: 148px;
+  }
+
+  .loom-demo-node--input { left: 5%; }
+  .loom-demo-node--output { right: 5%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loom-demo-node,
+  .loom-demo-canvas,
+  .loom-demo-editor,
+  .loom-demo-edge-base,
+  .loom-demo-code-line,
+  .loom-demo-terminal,
+  .loom-demo-run {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .loom-demo-node--input.is-visible,
+  .loom-demo-node--output.is-visible {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+  }
+
+  .loom-auth-demo.is-edge-drawn .loom-demo-edge-base {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}

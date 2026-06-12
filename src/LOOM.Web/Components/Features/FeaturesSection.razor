@@ -1,0 +1,69 @@
+<section class="features" id="features">
+    <div class="reveal">
+        <h2 class="section-title">
+            Build automations visually.<br />
+            <em>Ship them as C#.</em>
+        </h2>
+        <p class="section-sub">
+            Design API workflows, data transforms, validation steps, and outputs on one canvas. LOOM keeps the graph inspectable while generating source your team can own.
+        </p>
+    </div>
+
+    <div class="feature-grid reveal-stagger">
+        <div class="feature-card large">
+            <div class="feature-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" /></svg>
+            </div>
+            <h3>Executable workflow logic</h3>
+            <p>Model validation, transforms, API requests, and output branches as connected nodes.</p>
+            <div class="code-block"><span class="cmt">// RoslynScript</span>
+<span class="kw">var</span> message = input.ToUpperInvariant();
+<span class="kw">await</span> NotifyAsync(message);</div>
+        </div>
+
+        <div class="feature-card small">
+            <div class="feature-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4" /><path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9c2.4 0 4.58.94 6.18 2.47" /></svg>
+            </div>
+            <h3>Type-safe connections</h3>
+            <p>Every port carries a C# type. Incompatible wires are rejected before execution, so runtime failures are easier to prevent.</p>
+            <div class="feature-graph">
+                <svg viewBox="0 0 240 160" preserveAspectRatio="xMidYMid meet">
+                    <circle cx="40" cy="50" r="6" fill="#6ee7ff" />
+                    <text x="40" y="36" text-anchor="middle" fill="#9a9aa3" font-family="JetBrains Mono" font-size="9">string</text>
+                    <circle cx="40" cy="110" r="6" fill="#ff9d6e" />
+                    <text x="40" y="132" text-anchor="middle" fill="#9a9aa3" font-family="JetBrains Mono" font-size="9">bool</text>
+                    <circle cx="200" cy="50" r="6" fill="#b4f461" />
+                    <circle cx="200" cy="110" r="6" fill="#b4f461" />
+                    <path d="M 46 50 C 120 50, 120 50, 194 50" stroke="#b4f461" stroke-width="1.5" fill="none" stroke-dasharray="3 3" />
+                    <path d="M 46 110 C 120 110, 120 110, 194 110" stroke="#ff6058" stroke-width="1.5" fill="none" stroke-dasharray="3 3" opacity="0.5" />
+                    <text x="120" y="132" text-anchor="middle" fill="#ff6058" font-family="JetBrains Mono" font-size="9">blocked</text>
+                </svg>
+            </div>
+        </div>
+
+        <div class="feature-card medium">
+            <div class="feature-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
+            </div>
+            <h3>Export to idiomatic C#</h3>
+            <p>Every graph exports to clean .NET source. Review it, test it, extend it, and deploy it with the tooling you already use.</p>
+        </div>
+
+        <div class="feature-card medium">
+            <div class="feature-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" /><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" /><path d="M3 21v-5h5" /></svg>
+            </div>
+            <h3>Async by default</h3>
+            <p>HTTP calls, database steps, and long-running actions use async/await under the hood. Independent branches can run without blocking the workspace.</p>
+        </div>
+
+        <div class="feature-card wide">
+            <div class="feature-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
+            </div>
+            <h3>Inspect every value, at every stage</h3>
+            <p>Click any node to see inputs, outputs, execution time, and status. Debugging becomes a visual trail instead of a mental reconstruction.</p>
+        </div>
+    </div>
+</section>

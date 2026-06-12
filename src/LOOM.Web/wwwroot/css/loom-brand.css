@@ -1,0 +1,97 @@
+/* Shared Loom brand — thread mark + Fraunces wordmark */
+.loom-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.loom-brand-mark {
+  flex-shrink: 0;
+  color: var(--accent-bright, var(--accent));
+  filter: drop-shadow(0 0 14px var(--accent-glow)) drop-shadow(0 0 3px rgba(180, 244, 97, 0.45));
+}
+
+.loom-brand-wordmark {
+  display: flex;
+  gap: 1px;
+  color: var(--text);
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+}
+
+/* Auth / form panel */
+.loom-brand--default .loom-brand-mark,
+.auth-panel-brand .loom-brand-mark {
+  width: 44px;
+  height: 44px;
+  filter: drop-shadow(0 0 20px var(--accent-glow)) drop-shadow(0 0 6px rgba(180, 244, 97, 0.5));
+}
+
+.loom-brand--default .loom-brand-wordmark,
+.auth-panel-brand .loom-brand-wordmark {
+  font-size: 44px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* Cinematic intro — stacked mark over wordmark (original intro layout) */
+.loom-brand--intro {
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.loom-brand--intro .loom-brand-mark {
+  width: 200px;
+  height: 200px;
+  overflow: visible;
+}
+
+.loom-brand--intro .loom-brand-wordmark {
+  font-size: 44px;
+  margin-top: 28px;
+}
+
+/* Canvas topbar + nav */
+.loom-brand--compact {
+  gap: 10px;
+}
+
+.loom-brand--compact .loom-brand-mark {
+  width: 32px;
+  height: 32px;
+  color: var(--accent-bright, var(--accent));
+  filter: drop-shadow(0 0 12px var(--accent-glow)) drop-shadow(0 0 4px rgba(180, 244, 97, 0.4));
+}
+
+.loom-brand--compact .loom-brand-wordmark {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+[data-theme="light"] .loom-brand--compact .loom-brand-mark {
+  color: var(--accent-text);
+  filter: drop-shadow(0 0 8px var(--accent-glow));
+}
+
+[data-theme="light"] .loom-brand--default .loom-brand-mark,
+[data-theme="light"] .auth-panel-brand .loom-brand-mark {
+  color: var(--accent-text);
+  filter: drop-shadow(0 0 10px var(--accent-glow));
+}
+
+.topbar .brand .loom-brand {
+  pointer-events: none;
+}
+
+.topbar .brand:hover .loom-brand-mark {
+  transform: rotate(-6deg);
+  transition: transform 400ms var(--ease-spring);
+}
+
+.topbar .brand .loom-brand-mark {
+  transition: transform 400ms var(--ease-spring);
+}
