@@ -1,15 +1,18 @@
-div align="center">
+<div align="center">
+
+![LOOM — Visual Programming Platform](assets/banner.png)
 
 # LOOM
 
-### Visual Programming Platform — build logic as node graphs, compile to real C#
+### A node-based platform that turns visual workflows into real C# code
 
-[![Live](https://img.shields.io/badge/Live-loom.runasp.net-C9F24B?style=for-the-badge)](https://loom.runasp.net/)
-[![.NET](https://img.shields.io/badge/.NET-8-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
-[![Blazor](https://img.shields.io/badge/Blazor-512BD4?style=for-the-badge&logo=blazor&logoColor=white)](https://learn.microsoft.com/aspnet/core/blazor/)
+[![Live Demo](https://img.shields.io/badge/▶_Live_Demo-loom.runasp.net-9EFF00?style=for-the-badge&labelColor=060806)](https://loom.runasp.net/)
+&nbsp;
+[![.NET 8](https://img.shields.io/badge/.NET_8-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
+[![Blazor Server](https://img.shields.io/badge/Blazor_Server-512BD4?style=for-the-badge&logo=blazor&logoColor=white)](https://learn.microsoft.com/aspnet/core/blazor/)
 [![C#](https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=csharp&logoColor=white)](https://learn.microsoft.com/dotnet/csharp/)
 
-**[🚀 Try the live app](https://loom.runasp.net/)** · **[▶ Watch the demo](#-demo)**
+**[🚀 Try it live](https://loom.runasp.net/)** · **[🎬 Watch the demo](#-demo)** · **[⚡ How it works](#-how-it-works)**
 
 </div>
 
@@ -17,21 +20,23 @@ div align="center">
 
 ## ✨ Overview
 
-**LOOM** is a visual programming platform where you build logic on an infinite node canvas instead of writing code by hand. Drag out nodes, wire their ports together, hit **Run** to execute the graph, and **Export** it to clean, runnable **C#** — the visual graph *is* the program.
+Understanding program logic through raw source code alone is hard — especially for learners and teams reasoning about C# workflows. **LOOM** is a node-based web application that represents C# program logic visually, on an interactive drag-and-drop canvas.
 
-Built with **Blazor** and **.NET**, LOOM combines a real-time node editor, live execution, code generation, authenticated cloud persistence, and a shareable file format (`.loom`) in one browser-based tool.
+You model **inputs, operations, and data flow** as connected nodes, run the graph to see live results, and **export the whole thing to clean, runnable C#**. The visual graph *is* the program — bridging code-centric development with visual programming for students, educators, and developers.
 
-> **The idea:** lower the barrier to programming logic while keeping a direct, honest path back to real source code — no black boxes.
+Built on **ASP.NET Core (.NET 8)** with a **Blazor Server** frontend and a modular backend service layer.
 
 ---
 
 ## 🎬 Demo
 
-https://github.com/Loom-Dev-2026/LOOM/assets/demo.mp4
+<div align="center">
 
-> **▶ Full live version:** **[loom.runasp.net](https://loom.runasp.net/)**
+![LOOM demo — building a graph, running it, and exporting to C#](assets/demo.gif)
 
-<sub>To embed the video so it plays inline on GitHub: open this README on github.com in the web editor, delete the line above, then **drag `assets/demo.mp4` into the editor** — GitHub uploads it and inserts a playable link automatically. (GitHub renders committed `.mp4` files as inline players.)</sub>
+**[▶ Try it live at loom.runasp.net](https://loom.runasp.net/)**
+
+</div>
 
 ---
 
@@ -39,100 +44,131 @@ https://github.com/Loom-Dev-2026/LOOM/assets/demo.mp4
 
 | | |
 |---|---|
-| 🎨 **Visual node canvas** | Infinite pannable/zoomable workspace for composing logic as connected nodes. |
-| 🔌 **Port-based wiring** | Connect a node's output port to another's input by dragging — typed connections keep graphs valid. |
-| ⚡ **Live execution** | Press **Run** to evaluate the graph in place; nodes surface their state (idle · running · done). |
-| 🧾 **C# code generation** | **Export** any graph into readable, runnable C# — the compiled form of your visual logic. |
-| 💾 **`.loom` project files** | Save, load, and share graphs as portable `.loom` documents. |
-| 🔐 **Authentication** | Sign in with **Google** or **GitHub** via OAuth. |
-| ☁️ **Cloud persistence** | Your workspaces are saved to your account and synced across sessions. |
-| 🌐 **Runs in the browser** | No install — the whole editor ships as a Blazor web app. |
+| 🎨 **Node-based canvas** | Drag-and-drop workspace for composing logic as connected nodes. |
+| 🔌 **Typed ports & connections** | Wire an output port to an input port to define data flow; connections are validated. |
+| ⚡ **Live execution** | Run a workflow and watch each node evaluate in place — with visible state (idle → running → done). |
+| 🧾 **C# code export** | Generate readable, runnable C# from any graph — your visual logic as real source. |
+| ✅ **Validation** | Workflows are checked for correctness before they run. |
+| 💾 **Persistence** | Save, load, and revisit workflows; share them as `.loom` projects. |
+| 🔐 **Authentication** | Sign in with **Google** or **GitHub**. |
+| ☁️ **Cloud-hosted** | Runs entirely in the browser — live at [loom.runasp.net](https://loom.runasp.net/). |
+
+**Node library includes:** Number Input · String Input · math operations (Add, Subtract, Multiply, Divide) · Answer · Printer.
 
 ---
 
-## 🛠️ Tech Stack
+## ⚡ How It Works
 
-- **Frontend / UI:** Blazor (interactive web UI, C# end-to-end)
-- **Language & Runtime:** C# · .NET
-- **Code generation:** Graph → C# source compiler
-- **Auth:** OAuth 2.0 (Google, GitHub)
-- **Persistence:** Cloud-backed project storage
-- **Hosting:** Deployed on [loom.runasp.net](https://loom.runasp.net/)
+Every workflow is just nodes wired together. Here's a real one — computing `(10 ÷ 2) × 21 = 105`:
+
+```mermaid
+flowchart LR
+    A("Number Input · 10") --> D("Divide")
+    B("Number Input · 2") --> D
+    D --> R1("Answer · 5")
+    R1 --> M("Multiply")
+    C("Number Input · 21") --> M
+    M --> R2("Answer · 105")
+
+    classDef val fill:#12140f,stroke:#9EFF00,stroke-width:1.5px,color:#e8f5d0;
+    classDef op  fill:#0f1a12,stroke:#9EFF00,stroke-width:2.5px,color:#c9f24b;
+    class A,B,C,R1,R2 val;
+    class D,M op;
+    linkStyle default stroke:#9EFF00,stroke-width:2px;
+```
+
+| Step | What happens |
+|:--:|---|
+| **1 · Compose** | Drop nodes onto the canvas — each exposes typed input/output **ports**. |
+| **2 · Connect** | Drag between ports to define how data flows; LOOM validates the connection. |
+| **3 · Run** | The engine evaluates the workflow in dependency order and shows each result live. |
+| **4 · Export** | The same graph is translated into an equivalent, runnable **C#** program. |
+
+<details>
+<summary><b>▶ See the C# this graph exports</b></summary>
+
+<br>
+
+```csharp
+// Generated by LOOM
+// calculator.loom
+
+double a = 10;
+double b = 2;
+double c = 21;
+
+double quotient = a / b;       // Divide  → Answer  (5)
+double product  = quotient * c; // Multiply → Answer (105)
+```
+</details>
+
+---
+
+## 🏗️ Architecture
+
+LOOM is organized around a small, composable domain model:
+
+| Component | Role |
+|---|---|
+| **Node** *(abstract base)* | Common contract for every node; concrete types (Number Input, Multiply, Answer, Printer, …) extend it. |
+| **Port** | Typed input/output connection point on a node. |
+| **Connection** | A directed link from one node's output port to another's input port. |
+| **Workflow** | The full graph — nodes + connections — that gets validated, executed, and exported. |
+
+```
+Blazor Server (UI · canvas · node editor)
+        │
+        ▼
+Backend service layer  →  validation · execution engine · C# code generation · persistence
+```
 
 ---
 
 ## 🚀 Getting Started
 
 ### Use it now
-No setup required — just open **[loom.runasp.net](https://loom.runasp.net/)** and sign in with Google or GitHub.
+No setup required — open **[loom.runasp.net](https://loom.runasp.net/)** and sign in with Google or GitHub.
 
 ### Run locally
 
 **Prerequisites:** [.NET SDK 8.0+](https://dotnet.microsoft.com/download)
 
 ```bash
-# 1. Clone
 git clone https://github.com/Loom-Dev-2026/LOOM.git
 cd LOOM
-
-# 2. Restore dependencies
 dotnet restore
-
-# 3. Run
 dotnet run
 ```
 
-Then open the URL printed in the console (typically `https://localhost:5001`).
+Open the URL printed in the console (typically `https://localhost:5001`).
 
-> **Auth & cloud features:** Google/GitHub sign-in and cloud persistence require OAuth client credentials and a storage connection string. Add them via user secrets or `appsettings.Development.json`:
->
+> **Auth & cloud sync** need OAuth credentials. Add them via user secrets — without them, LOOM still runs fully for building, executing, and exporting workflows locally:
 > ```bash
 > dotnet user-secrets set "Authentication:Google:ClientId" "..."
 > dotnet user-secrets set "Authentication:Google:ClientSecret" "..."
 > dotnet user-secrets set "Authentication:GitHub:ClientId" "..."
 > dotnet user-secrets set "Authentication:GitHub:ClientSecret" "..."
 > ```
->
-> Without them, LOOM still runs — you can build, execute and export graphs locally; only sign-in and cloud sync are disabled.
-
----
-
-## 🧠 How It Works
-
-```
-   ┌──────────────┐         ┌──────────────┐
-   │  String node │──────▶  │  Answer node │
-   │ "Hello World"│  wire   │      —       │
-   └──────────────┘         └──────────────┘
-          │                        │
-          ▼                        ▼
-   ┌─────────────────────────────────────┐
-   │   Run  →  evaluate graph in place   │
-   │   Export → generate equivalent C#   │
-   └─────────────────────────────────────┘
-```
-
-1. **Compose** — drop nodes onto the canvas; each has typed input and output ports.
-2. **Connect** — drag from an output port to an input port to define data flow.
-3. **Run** — LOOM walks the graph in dependency order and executes it live.
-4. **Export** — the same graph is translated into a C# program you can run outside LOOM.
-5. **Save** — persist the graph as a `.loom` file or to your cloud account.
 
 ---
 
 ## 🗺️ Roadmap
 
-- [ ] Expanded node library (math, control flow, collections, I/O)
-- [ ] Custom / reusable sub-graph nodes
+- [ ] Expanded node library (control flow, conditions, collections, I/O)
+- [ ] Reusable sub-graph / custom nodes
 - [ ] Real-time collaboration on a shared canvas
-- [ ] Export to additional targets beyond C#
-- [ ] Community graph gallery
+- [ ] Additional export targets beyond C#
 
 ---
 
-## 🤝 Contributing
+## 👥 Authors
 
-Contributions, issues, and feature requests are welcome. Open an issue to discuss a change, or fork the repo and submit a pull request.
+Built for the **Visual Programming** course, Department of Computer Science.
+
+- **Tasnima Sajid** — [GitHub](https://github.com/TasnimaSajid) · [LinkedIn](https://www.linkedin.com/in/tasnima-sajid-b37563421/)
+- **Ali Tahir**
+
+<sub>Supervised by Sir Hafiz Ubaidullah · Spring 2026</sub>
 
 ---
 
@@ -140,11 +176,9 @@ Contributions, issues, and feature requests are welcome. Open an issue to discus
 
 Released under the MIT License — see [`LICENSE`](LICENSE) for details.
 
----
-
 <div align="center">
+<br>
 
 **Built with Blazor & .NET** · **[loom.runasp.net](https://loom.runasp.net/)**
 
 </div>
-
