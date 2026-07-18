@@ -12,7 +12,7 @@
 [![Blazor Server](https://img.shields.io/badge/Blazor_Server-512BD4?style=for-the-badge&logo=blazor&logoColor=white)](https://learn.microsoft.com/aspnet/core/blazor/)
 [![C#](https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=csharp&logoColor=white)](https://learn.microsoft.com/dotnet/csharp/)
 
-**[🚀 Try it live](https://loom.runasp.net/)** · **[🎬 Watch the demo](#-demo)** · **[⚡ How it works](#-how-it-works)**
+**[🚀 Try it live](https://loom.runasp.net/)**  **[⚡ How it works](#-how-it-works)**
 
 </div>
 
@@ -26,17 +26,6 @@ You model **inputs, operations, and data flow** as connected nodes, run the grap
 
 Built on **ASP.NET Core (.NET 8)** with a **Blazor Server** frontend and a modular backend service layer.
 
----
-
-## 🎬 Demo
-
-<div align="center">
-
-![LOOM demo — building a graph, running it, and exporting to C#](demo.gif)
-
-**[▶ Try it live at loom.runasp.net](https://loom.runasp.net/)**
-
-</div>
 
 ---
 
