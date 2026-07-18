@@ -1,4 +1,4 @@
-<div align="center">
+div align="center">
 
 # LOOM
 
@@ -100,15 +100,15 @@ Then open the URL printed in the console (typically `https://localhost:5001`).
 ## 🧠 How It Works
 
 ```
-   ┌──────────────┐        ┌──────────────┐
-   │  String node │──────▶ │  Answer node │
-   │ "Hello World"│  wire  │      —       │
-   └──────────────┘        └──────────────┘
+   ┌──────────────┐         ┌──────────────┐
+   │  String node │──────▶  │  Answer node │
+   │ "Hello World"│  wire   │      —       │
+   └──────────────┘         └──────────────┘
           │                        │
           ▼                        ▼
    ┌─────────────────────────────────────┐
-   │   Run  →  evaluate graph in place    │
-   │   Export → generate equivalent C#    │
+   │   Run  →  evaluate graph in place   │
+   │   Export → generate equivalent C#   │
    └─────────────────────────────────────┘
 ```
 
@@ -147,5 +147,4 @@ Released under the MIT License — see [`LICENSE`](LICENSE) for details.
 **Built with Blazor & .NET** · **[loom.runasp.net](https://loom.runasp.net/)**
 
 </div>
-
 
