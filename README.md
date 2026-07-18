@@ -1,6 +1,6 @@
 <div align="center">
 
-![LOOM — Visual Programming Platform](assets/banner.png)
+![LOOM — Visual Programming Platform](banner.png)
 
 # LOOM
 
@@ -32,7 +32,7 @@ Built on **ASP.NET Core (.NET 8)** with a **Blazor Server** frontend and a modul
 
 <div align="center">
 
-![LOOM demo — building a graph, running it, and exporting to C#](assets/demo.gif)
+![LOOM demo — building a graph, running it, and exporting to C#](demo.gif)
 
 **[▶ Try it live at loom.runasp.net](https://loom.runasp.net/)**
 
