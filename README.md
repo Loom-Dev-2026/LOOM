@@ -6,8 +6,6 @@
 
 ### A node-based platform that turns visual workflows into real C# code
 
-[![Live Demo](https://img.shields.io/badge/▶_Live_Demo-loom.runasp.net-9EFF00?style=for-the-badge&labelColor=060806)](https://loom.runasp.net/)
-&nbsp;
 [![.NET 8](https://img.shields.io/badge/.NET_8-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
 [![Blazor Server](https://img.shields.io/badge/Blazor_Server-512BD4?style=for-the-badge&logo=blazor&logoColor=white)](https://learn.microsoft.com/aspnet/core/blazor/)
 [![C#](https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=csharp&logoColor=white)](https://learn.microsoft.com/dotnet/csharp/)
